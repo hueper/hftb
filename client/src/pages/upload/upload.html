@@ -1,0 +1,28 @@
+<ion-content padding>
+  <img src="{{pathForImage(lastImage)}}" style="width: 100%" [hidden]="lastImage === null">
+  <ion-list [hidden]="lastImage === null">
+    <ion-item>
+      <ion-label floating>Location</ion-label>
+      <!--<ion-input [(ngModel)]="imageMetaData.location" type="text"></ion-input>-->
+      <ion-input tappable (click)="showAddressModal()" [(ngModel)]="imageMetaData.location" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label floating>Date</ion-label>
+      <ion-input [(ngModel)]="imageMetaData.date" type="text"></ion-input>
+    </ion-item>
+  </ion-list>
+  <h3 [hidden]="lastImage !== null">Please Select Image!</h3>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar color="primary">
+    <ion-buttons>
+      <button ion-button icon-left (click)="presentActionSheet()">
+        <ion-icon name="camera"></ion-icon>Select Image
+      </button>
+      <button ion-button icon-left (click)="uploadImage(imageMetaData)" [disabled]="lastImage === null">
+        <ion-icon name="cloud-upload"></ion-icon>Upload
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

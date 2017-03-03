@@ -1,0 +1,47 @@
+page-home {
+
+}
+ion-app.md, .content-ios{
+  font-family: sans-serif, 'Helvetica Neue';
+  font-weight: 300;
+  padding:0;
+  margin:0;
+  letter-spacing: 1px;
+  text-align: center;
+  background-color: #222222;
+  color: rgba(100,100,100,1);
+}
+.content-md{
+  background-color: inherit;
+  color:inherit;
+}
+img{
+  /*max-width:50%;*/
+}
+h1{
+  font-weight: 200;
+  font-family: 'Times New Roman';
+  letter-spacing: 3px;
+}
+a{
+  color: rgba(140,140,140,1);
+  text-decoration: none;
+  transition: all 0.4s;
+  /*border-bottom: 1px solid #fff;*/
+}
+.imgSpacer{
+  width: 100%;
+  text-align: center;
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+}
+.desc{
+  position: relative;
+  text-align: center;
+  padding-top: 2rem;
+  padding-bottom: 5rem;
+  line-height: 2rem;
+}
+a:hover{
+  color: rgba(250,250,250,1);
+}

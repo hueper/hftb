@@ -1,0 +1,20 @@
+<ion-content padding style="text-align:center;">
+  <div *ngFor="let image of images | async" class="imgSpacer">
+    <img width="640px" height="auto" src="{{ baseUrl }}/uploads/{{ image.filename }}"/>
+    <div class="desc-spacer">
+      <div class="desc">
+        <a target="__blank" href="https://www.google.com/maps/?q={{ image.location }}">
+          {{ image.location }}</a>
+          <br/>
+          <i>{{ image.date }}</i>
+      </div>
+    </div>
+  </div>
+
+  <ion-infinite-scroll (ionInfinite)="doInfinite($event)" threshold="500px">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles"
+      loadingText="Loading more data...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>
