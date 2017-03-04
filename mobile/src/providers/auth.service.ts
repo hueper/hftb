@@ -1,5 +1,6 @@
-import {Injectable} from '@angular/core';
-import {Http, Headers} from '@angular/http';
+import { Injectable } from '@angular/core';
+import { Http, Headers } from '@angular/http';
+import { ENV } from '../environments/environment.dev';
 
 @Injectable()
 export class AuthService {
@@ -12,7 +13,7 @@ export class AuthService {
     this.http = http;
     this.isLoggedin = false;
     this.AuthToken = null;
-    this.baseUrl = 'http://hftb.eu:3334/api';
+    this.baseUrl = ENV.API_URL;
   }
 
   storeUserCredentials(token) {
