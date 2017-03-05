@@ -17,19 +17,20 @@ I wanted to have a very(!) simple photoblog - built with Ionic 2 - providing the
 - infinite-scroll to load images while scrolling
 
 #### Install
+You'll need Git and [Yarn](https://github.com/yarnpkg/yarn) (or npm) to get and install:
 ```shell
     $ git clone https://github.com/hueper/hftb.git
 
     # Mobile:
     $ cd hftb/mobile
-    $ npm install
+    $ yarn install
     $ ionic serve
     # or
     $ ionic serve --prod
 
     # Client:
     $ cd hftb/client
-    $ npm install
+    $ yarn install
     $ ionic serve
     # or
     $ ionic serve --prod
@@ -37,7 +38,7 @@ I wanted to have a very(!) simple photoblog - built with Ionic 2 - providing the
     # Server:
     # make sure you have mongodb
     $ cd hftb/server
-    $ npm install
+    $ yarn install
     $ node server.js
 ```
 
