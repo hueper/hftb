@@ -17,12 +17,18 @@
 <ion-footer>
   <ion-toolbar color="primary">
     <ion-buttons>
-      <button ion-button icon-left (click)="presentActionSheet()">
-        <ion-icon name="camera"></ion-icon>Select Image
-      </button>
-      <button ion-button icon-left (click)="uploadImage(imageMetaData)" [disabled]="lastImage === null">
-        <ion-icon name="cloud-upload"></ion-icon>Upload
-      </button>
+      <div *ngIf="(platform.is('cordova'))">
+        <button ion-button icon-left (click)="presentActionSheet()">
+          <ion-icon name="camera"></ion-icon>Select Image
+        </button>
+        <button ion-button icon-left (click)="uploadImage(imageMetaData)" [disabled]="lastImage === null">
+          <ion-icon name="cloud-upload"></ion-icon>Upload
+        </button>
+      </div>
+      <div *ngIf="(!platform.is('cordova'))">
+        <input type="file" (change)="fileChangeEvent($event)" placeholder="Upload file..." />
+        <button type="button" (click)="upload(imageMetaData)">Upload</button>
+      </div>
     </ion-buttons>
   </ion-toolbar>
 </ion-footer>
