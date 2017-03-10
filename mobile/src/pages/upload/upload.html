@@ -1,6 +1,6 @@
 <ion-content padding>
-  <img src="{{pathForImage(lastImage)}}" style="width: 100%" [hidden]="lastImage === null">
-  <ion-list [hidden]="lastImage === null">
+  <img id="preview" src="{{pathForImage(lastImage)}}" style="width: 100%">
+  <ion-list>
     <ion-item>
       <ion-label floating>Location</ion-label>
       <ion-input tappable (click)="showAddressModal()" [(ngModel)]="imageMetaData.location" type="text"></ion-input>
@@ -21,13 +21,13 @@
         <button ion-button icon-left (click)="presentActionSheet()">
           <ion-icon name="camera"></ion-icon>Select Image
         </button>
-        <button ion-button icon-left (click)="uploadImage(imageMetaData)" [disabled]="lastImage === null">
+        <button ion-button icon-left (click)="uploadImageCordova(imageMetaData)" [disabled]="lastImage === null">
           <ion-icon name="cloud-upload"></ion-icon>Upload
         </button>
       </div>
       <div *ngIf="(!platform.is('cordova'))">
-        <input type="file" (change)="fileChangeEvent($event)" placeholder="Upload file..." />
-        <button type="button" (click)="upload(imageMetaData)">Upload</button>
+        <input type="file" (change)="inputChangeHandler($event)" placeholder="Upload file..." />
+        <button type="button" (click)="makeXMLHttpRequest(imageMetaData)">Upload</button>
       </div>
     </ion-buttons>
   </ion-toolbar>

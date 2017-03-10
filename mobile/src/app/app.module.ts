@@ -11,6 +11,7 @@ import { EditPage } from '../pages/edit/edit';
 import { ImageEditPage } from '../pages/image-edit/image-edit';
 import { AuthService } from '../providers/auth.service';
 import { ImageService } from '../providers/image.service';
+import { FileUploadService } from '../providers/fileupload.service';
 import { AutocompletePage } from '../pages/autocomplete/autocomplete';
 
 
@@ -50,7 +51,8 @@ import { AutocompletePage } from '../pages/autocomplete/autocomplete';
   ],
   providers: [
     AuthService,
-    ImageService
+    ImageService,
+    FileUploadService
   ]
 })
 export class AppModule {}

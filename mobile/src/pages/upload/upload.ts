@@ -14,6 +14,7 @@ import { Camera, File, Transfer, FilePath } from 'ionic-native';
 import { HomePage } from '../home/home';
 import { LoginPage } from '../login/login';
 import { AuthService } from '../../providers/auth.service';
+import { FileUploadService } from '../../providers/fileupload.service';
 import { AutocompletePage } from '../autocomplete/autocomplete';
 import { ENV } from '../../environments/environment.dev';
 
@@ -31,6 +32,11 @@ export class UploadPage {
     date: ''
   };
   private baseUrl: string;
+  images: any;
+  uploadProgress: number;
+  isSubmitted: boolean;
+  uploadRoute: string;
+  progressBarVisibility: boolean;
 
   constructor(
     public http: Http,
@@ -41,11 +47,14 @@ export class UploadPage {
     public toastCtrl: ToastController,
     public platform: Platform,
     public authService: AuthService,
+    public fileUpload: FileUploadService,
     public loadingCtrl: LoadingController) {
-      this.baseUrl = ENV.API_URL;
-    }
+    this.baseUrl = ENV.API_URL;
+    this.images = new Array<File>();
+    this.uploadRoute = this.baseUrl + '/upload';
+  }
 
-  showAddressModal () {
+  showAddressModal() {
     let modal = this.modalCtrl.create(AutocompletePage);
     modal.onDidDismiss(data => {
       this.imageMetaData.location = data;
@@ -79,7 +88,61 @@ export class UploadPage {
     });
   }
 
-  public uploadImage(imageMetaData) {
+  public uploadImageXHR(imageMetaData) {
+
+  }
+
+  public inputChangeHandler (fileInput: any) {
+    let FileList: FileList = fileInput.target.files;
+    this.images.length = 0;
+    for (let i = 0, length = FileList.length; i < length; i++) {
+      this.images.push(FileList.item(i));
+    }
+    // to display preview before uploading
+    this.pathForImage(fileInput.target.files[0]);
+
+    this.progressBarVisibility = true;
+  }
+
+  /*
+   * Upload image without Cordova plugins
+   */
+  public makeXMLHttpRequest (imageMetaData) {
+    let result: any;
+
+    if (!this.images.length) {
+      return;
+    }
+
+    this.isSubmitted = true;
+
+    this.fileUpload.getObserver()
+      .subscribe(progress => {
+        console.log(progress);
+        this.uploadProgress = progress;
+      });
+
+    try {
+      result = this.fileUpload.upload(this.uploadRoute, this.images).then((res) => {
+        this.presentToast(res.msg);
+        var fileMetaData = res.file;
+        Object.assign(imageMetaData, fileMetaData);
+        this.saveImageMetaData(imageMetaData);
+      }, (err) => {
+        console.log(err);
+      });
+    } catch (error) {
+      document.write(error);
+    }
+    if (!result['file']) {
+      return;
+    }
+  }
+
+  /*
+   * Upload image with Cordova plugins
+   */
+  public uploadImageCordova(imageMetaData) {
     // File for Upload
     var targetPath = this.pathForImage(this.lastImage);
 
@@ -91,7 +154,7 @@ export class UploadPage {
       fileName: filename,
       chunkedMode: false,
       mimeType: 'multipart/form-data',
-      params : {'fileName': filename}
+      params: { 'fileName': filename }
     };
 
     const fileTransfer = new Transfer();
@@ -127,20 +190,20 @@ export class UploadPage {
   // Create a new name for the image
   private createFileName() {
     var d = new Date(),
-    n = d.getTime(),
-    newFileName =  n + '.jpg';
+      n = d.getTime(),
+      newFileName = n + '.jpg';
     return newFileName;
   }
 
   // Copy the image to a local folder
   private copyFileToLocalDir(namePath, currentName, newFileName) {
     File.copyFile(namePath, currentName, cordova.file.dataDirectory, newFileName)
-    .then(success => {
-      this.lastImage = newFileName;
-    })
-    .catch(err => {
-      this.presentToast('Error while storing file.');
-    });
+      .then(success => {
+        this.lastImage = newFileName;
+      })
+      .catch(err => {
+        this.presentToast('Error while storing file.');
+      });
   }
 
   private presentToast(text) {
@@ -157,7 +220,18 @@ export class UploadPage {
     if (img === null) {
       return '';
     } else {
-      return cordova.file.dataDirectory + img;
+      if (this.platform.is('cordova')) {
+        return cordova.file.dataDirectory + img;
+      } else {
+        let reader  = new FileReader();
+        let preview = document.querySelector('img');
+        reader.addEventListener("load", function () {
+          preview.src = reader.result;
+        }, false);
+        if (img) {
+          reader.readAsDataURL(img);
+        }
+      }
     }
   }
 
@@ -177,11 +251,11 @@ export class UploadPage {
       // Special handling for Android library
       if (this.platform.is('android') && sourceType === Camera.PictureSourceType.PHOTOLIBRARY) {
         FilePath.resolveNativePath(imagePath)
-        .then(filePath => {
-          var currentName = imagePath.substr(imagePath.lastIndexOf('/') + 1);
-          var correctPath = filePath.substr(0, imagePath.lastIndexOf('/') + 1);
-          this.copyFileToLocalDir(correctPath, currentName, this.createFileName());
-        });
+          .then(filePath => {
+            var currentName = imagePath.substr(imagePath.lastIndexOf('/') + 1);
+            var correctPath = filePath.substr(0, imagePath.lastIndexOf('/') + 1);
+            this.copyFileToLocalDir(correctPath, currentName, this.createFileName());
+          });
       } else {
         var currentName = imagePath.substr(imagePath.lastIndexOf('/') + 1);
         var correctPath = imagePath.substr(0, imagePath.lastIndexOf('/') + 1);

@@ -71,13 +71,13 @@ var images = {
     });
   },
   uploadFile : function (req, res) {
+    // ???
     if (true) {
       var storage = multer.diskStorage({
         destination: function (req, file, cb) {
-          cb(null, '../client/www/uploads/')
+          cb(null, '../mobile/www/uploads/')
         },
         filename: function (req, file, cb) {
-
           var ext = file.originalname.split('.')[1];
           var newFilename = file.fieldname + '-' + Date.now() + '.' + ext;
           cb(null, newFilename)
