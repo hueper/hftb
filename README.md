@@ -1,6 +1,6 @@
 ## hftb
 
-Photoblog (PWA), built with Ionic 2. http://hftb.eu
+Photoblog (PWA), built with Ionic 2.
 
 #### Description
 I wanted to have a very(!) simple photoblog - built with Ionic 2 - providing the following two features:<br/>
